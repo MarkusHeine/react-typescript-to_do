@@ -1,21 +1,32 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { BreedContext } from "../context/BreedContext";
 import "./BreedList.css";
+import { BreedContextInterface } from "../interfaces/BreedContext";
 
 export const ToDoList: React.FC = () => {
   const breeds = useContext(BreedContext);
   const [breedSearch, setBreedSearch] = useState<string>("");
-
-  breeds && console.log(breeds.breeds);
+  const [breedList, setBreedList] = useState<BreedContextInterface | null>();
 
   const onBreedSearchChange = (event: { target: { value: string } }) => {
     setBreedSearch(event.target.value);
+    if (breeds && breeds.breeds !== null) {
+      const result = breeds.breeds.filter(breed =>
+        breed.name.toLowerCase().startsWith(event.target.value.toLowerCase())
+      );
+      console.log(result);
+      setBreedList({ breeds: result });
+    }
   };
 
   const onSearchClick = (event: { preventDefault: () => void }) => {
     event.preventDefault();
     setBreedSearch("");
   };
+
+  useEffect(() => {
+    setBreedList(breeds);
+  }, [breeds]);
 
   return (
     <>
@@ -29,6 +40,7 @@ export const ToDoList: React.FC = () => {
                 id="breedSearch"
                 onChange={onBreedSearchChange}
                 value={breedSearch}
+                autoComplete="off"
               />
             </div>
             <button
@@ -42,9 +54,9 @@ export const ToDoList: React.FC = () => {
         </div>
         <div className="w-100"></div>
         <div className="breedList col-sm-12 overflow-auto">
-          {breeds &&
-            breeds.breeds !== null &&
-            breeds.breeds.map(breed => (
+          {breedList &&
+            breedList.breeds !== null &&
+            breedList.breeds.map(breed => (
               <div
                 key={breed.id}
                 className="list-group-item clearfix m-1 border-top-0 border-right-0 border-left-0 rounded-0 d-flex flex-row shadow-sm bg-white rounded"
