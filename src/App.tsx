@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import { ToDoList } from "./components/toDoList";
+import { ToDoList } from "./components/BreedList";
 import { BreedContext } from "./context/BreedContext";
 import { BreedAPI } from "./interfaces/BreedApi";
 import * as secrets from "./secrets.json";
 
 const App: React.FC = () => {
-  const [selectedToDo, setSelectedToDo] = useState(null);
   const [breeds, setBreeds] = useState<BreedAPI[] | null>(null);
-
-  console.log(breeds);
 
   useEffect(() => {
     (async () => {
